@@ -8,7 +8,7 @@ const ChatWindowsContainer = async ({
   conversations: Conversation[];
 }) => {
   return (
-    <div className="grid grid-cols-[1fr_1fr_1fr] gap-4 p-4 h-screen">
+    <div className="grid md:grid-cols-[1fr_1fr_1fr] gap-4 p-4 h-screen">
       {conversations.map((e) => {
         return (
           <ChatWindow

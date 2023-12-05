@@ -19,7 +19,7 @@ const ChatWindowBody = ({ chat }: { chat: Message[] }) => {
       {!minWindow && (
         <>
           <ChatWindowMessageList chat={chat} />
-          <ChatWindowInput />
+          {/* <ChatWindowInput /> */}
         </>
       )}
     </div>
