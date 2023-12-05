@@ -3,6 +3,8 @@ import ChatWindowsContainer from "@/components/ChatWindowsContainer";
 import { Conversation } from "@/types";
 import { getConversations } from "@/utils/getConversations";
 
+export const revalidate = 60;
+
 export default async function Home() {
   const conversations = (await getConversations()) as Conversation[];
 
