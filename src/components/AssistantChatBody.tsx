@@ -1,8 +1,17 @@
+"use client";
+
 import React from "react";
 import AssistantChatMessageList from "./AssistantChatMessageList";
 import AssistantChatForm from "./AssistantChatForm";
+import useTrackUserAgent from "@/hooks/useTrackUserAgent";
 
-const AssistantChatBody = () => {
+const AssistantChatBody = ({
+  userAgentCookie,
+}: {
+  userAgentCookie: string | undefined;
+}) => {
+  useTrackUserAgent(userAgentCookie);
+
   return (
     <div className="grid grid-cols-1 gap-4 p-4">
       <div className="flex flex-col border dark:border-gray-800 rounded-lg relative">
