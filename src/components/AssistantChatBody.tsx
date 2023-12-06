@@ -1,9 +1,13 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import AssistantChatMessageList from "./AssistantChatMessageList";
 import AssistantChatForm from "./AssistantChatForm";
 import useTrackUserAgent from "@/hooks/useTrackUserAgent";
+import { Socket, io } from "socket.io-client";
+import { ChatMessage } from "@/types";
+
+const AssistantChatMessageListMemoized = React.memo(AssistantChatMessageList);
 
 const AssistantChatBody = ({
   userAgentCookie,
@@ -11,6 +15,55 @@ const AssistantChatBody = ({
   userAgentCookie: string | undefined;
 }) => {
   useTrackUserAgent(userAgentCookie);
+
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [newMessage, setNewMessage] = useState<string>("");
+
+  const socketRef = useRef<Socket | null>(null);
+
+  useEffect(() => {
+    // Initialize socket only once
+    const socketURL =
+      process.env.NEXT_PUBLIC_SOCKET_URL || "http://localhost:3000";
+    socketRef.current = io(socketURL, {
+      reconnection: true,
+      transports: ["websocket"],
+    });
+
+    socketRef.current.on("message", (message) => {
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { From: "Asistente", Body: message },
+      ]);
+    });
+
+    socketRef.current.on("connect_error", (err) => {
+      console.error("Connection Error:", err.message);
+    });
+
+    return () => {
+      if (socketRef.current) {
+        socketRef.current.off("message");
+        socketRef.current.off("connect_error");
+        socketRef.current.disconnect();
+      }
+    };
+  }, []);
+
+  const sendMessage = () => {
+    setMessages((prevMessages) => [
+      ...prevMessages,
+      { From: "Tu", Body: newMessage },
+    ]);
+    if (socketRef.current) {
+      socketRef.current.emit("message", {
+        business: "CHIPAS",
+        From: userAgentCookie,
+        Body: newMessage,
+      });
+    }
+    setNewMessage("");
+  };
 
   return (
     <div className="grid grid-cols-1 gap-4 p-4">
@@ -74,8 +127,12 @@ const AssistantChatBody = ({
           </button>
         </div> */}
 
-        <AssistantChatMessageList />
-        <AssistantChatForm />
+        <AssistantChatMessageListMemoized messages={messages} />
+        <AssistantChatForm
+          sendMessage={sendMessage}
+          newMessage={newMessage}
+          setNewMessage={setNewMessage}
+        />
       </div>
     </div>
   );

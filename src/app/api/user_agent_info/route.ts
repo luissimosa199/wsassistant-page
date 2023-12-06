@@ -1,11 +1,11 @@
 import dbConnect from "@/db/dbConnect";
 import { cookies } from "next/headers";
-import { v4 as uuidv4 } from "uuid";
+import { nanoid } from "nanoid";
 
 export async function POST(req: Request) {
   const useCookie = cookies();
   const { userData } = await req.json();
-  const newId = uuidv4();
+  const newId = nanoid(13);
 
   try {
     if (!dbConnect) {

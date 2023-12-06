@@ -1,22 +1,35 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
+import { ChatMessage } from "@/types";
 
-const AssistantChatMessageList = () => {
+const AssistantChatMessageList = ({
+  messages,
+}: {
+  messages: ChatMessage[];
+}) => {
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      const { scrollHeight, clientHeight } = scrollRef.current;
+      scrollRef.current.scrollTo({
+        top: scrollHeight - clientHeight,
+        behavior: "smooth",
+      });
+    }
+  }, [messages]);
+
   return (
-    <div className="flex-1 overflow-y-auto space-y-4 pt-10 p-4">
+    <div
+      className="grow shrink basis-0 overflow-y-scroll space-y-4 pt-10 p-4 scrollbar"
+      ref={scrollRef}
+    >
       <div className="flex flex-col space-y-2">
-        <p className="font-semibold">User:</p>
-        <p className="text-gray-700">Hello, how are you?</p>
-        <p className="font-semibold">AI:</p>
-        <p className="text-gray-700">
-          I&apos;m doing great, thanks for asking. How can I assist you today?
-        </p>
-        <p className="font-semibold">User:</p>
-        <p className="text-gray-700">I need help with my project.</p>
-        <p className="font-semibold">AI:</p>
-        <p className="text-gray-700">
-          Sure, I&apos;d be happy to help. Can you tell me more about your
-          project?
-        </p>
+        {messages.map((e, idx) => (
+          <div key={`message_${idx}`}>
+            <p className="font-semibold">{e.From}</p>
+            <p className="text-gray-700">{e.Body}</p>
+          </div>
+        ))}
       </div>
     </div>
   );

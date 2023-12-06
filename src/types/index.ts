@@ -10,3 +10,8 @@ export interface Message {
   timestamp: string;
   conversationUserNumber: string;
 }
+
+export interface ChatMessage {
+  From: string;
+  Body: string;
+}
