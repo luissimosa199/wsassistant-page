@@ -10,7 +10,7 @@ export default async function Home() {
 
   return (
     <main>
-      <div className="grid grid-cols-1 md:grid-cols-[300px_1fr] md:h-screen md:overflow-hidden">
+      <div className="grid grid-cols-1 md:grid-cols-[300px_1fr] md:h-screen md:w-max">
         <AsideMenu conversations={conversations} />
         <ChatWindowsContainer conversations={conversations} />
       </div>

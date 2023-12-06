@@ -11,7 +11,7 @@ const ChatWindowBody = ({ chat }: { chat: Message[] }) => {
 
   return (
     <div
-      className={`flex flex-col border dark:border-gray-800 rounded-lg relative ${
+      className={`flex flex-col border dark:border-gray-800 rounded-lg relative max-w-md ${
         minWindow ? "h-fit self-end" : ""
       }`}
     >
