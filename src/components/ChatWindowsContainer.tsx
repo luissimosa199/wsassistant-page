@@ -12,7 +12,7 @@ const ChatWindowsContainer = async ({
       {conversations.map((e) => {
         return (
           <ChatWindow
-            key={e.userNumber}
+            key={`chat_window_${e.userNumber}`}
             conversation={e.userNumber}
           />
         );

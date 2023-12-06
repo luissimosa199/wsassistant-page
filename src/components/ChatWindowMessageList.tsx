@@ -8,7 +8,7 @@ const ChatWindowMessageList = ({ chat }: { chat: Message[] }) => {
         {chat.map((e) => {
           return (
             <div
-              key={e.id}
+              key={`chat_window_message_${e.id}`}
               className="mb-2 pr-2"
             >
               <span className="font-semibold">{e.author}: </span>
