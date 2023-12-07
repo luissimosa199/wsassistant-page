@@ -5,8 +5,14 @@ import ChatWindowBody from "./ChatWindowBody";
 
 export const revalidate = 60;
 
-const ChatWindow = async ({ conversation }: { conversation: string }) => {
-  const chat = (await getChat(conversation)) as Message[];
+const ChatWindow = async ({
+  conversation,
+  ownerName,
+}: {
+  conversation: string;
+  ownerName: string;
+}) => {
+  const chat = (await getChat(conversation, ownerName)) as Message[];
 
   return <ChatWindowBody chat={chat} />;
 };

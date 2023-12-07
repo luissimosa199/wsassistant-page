@@ -4,8 +4,10 @@ import { Conversation } from "@/types";
 
 const ChatWindowsContainer = async ({
   conversations,
+  ownerName,
 }: {
   conversations: Conversation[];
+  ownerName: string;
 }) => {
   return (
     <div className="grid md:flex md:flex-wrap gap-4 p-4 h-screen">
@@ -20,6 +22,7 @@ const ChatWindowsContainer = async ({
           <ChatWindow
             key={`chat_window_${e.userNumber}`}
             conversation={e.userNumber}
+            ownerName={ownerName}
           />
         );
       })}
