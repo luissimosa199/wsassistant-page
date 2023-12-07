@@ -1,5 +1,4 @@
 import { Conversation } from "@/types";
-import { getConversations } from "@/utils/getConversations";
 import React from "react";
 
 const AsideMenuChatList = async ({
@@ -51,7 +50,7 @@ const AsideMenuChatList = async ({
       {conversations?.map((e) => {
         return (
           <div
-            key={e.ownerId}
+            key={`aside_${e.userNumber}`}
             className="border rounded-md p-4"
           >
             <h3 className="font-medium">{e.userNumber}</h3>

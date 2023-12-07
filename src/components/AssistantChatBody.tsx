@@ -6,6 +6,7 @@ import AssistantChatForm from "./AssistantChatForm";
 import useTrackUserAgent from "@/hooks/useTrackUserAgent";
 import { Socket, io } from "socket.io-client";
 import { ChatMessage } from "@/types";
+import useGetBusinessName from "@/hooks/useGetBusinessName";
 
 const AssistantChatMessageListMemoized = React.memo(AssistantChatMessageList);
 
@@ -14,6 +15,8 @@ const AssistantChatBody = ({
 }: {
   userAgentCookie: string | undefined;
 }) => {
+  const businessName = useGetBusinessName();
+
   useTrackUserAgent(userAgentCookie);
 
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -22,24 +25,25 @@ const AssistantChatBody = ({
   const socketRef = useRef<Socket | null>(null);
 
   useEffect(() => {
-    // Initialize socket only once
-    const socketURL =
-      process.env.NEXT_PUBLIC_SOCKET_URL || "http://localhost:3000";
-    socketRef.current = io(socketURL, {
-      reconnection: true,
-      transports: ["websocket"],
-    });
+    if (businessName) {
+      const socketURL =
+        process.env.NEXT_PUBLIC_SOCKET_URL || "http://localhost:3000";
+      socketRef.current = io(socketURL, {
+        reconnection: true,
+        transports: ["websocket"],
+      });
 
-    socketRef.current.on("message", (message) => {
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        { From: "Asistente", Body: message },
-      ]);
-    });
+      socketRef.current.on("message", (message) => {
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          { From: "Asistente", Body: message },
+        ]);
+      });
 
-    socketRef.current.on("connect_error", (err) => {
-      console.error("Connection Error:", err.message);
-    });
+      socketRef.current.on("connect_error", (err) => {
+        console.error("Connection Error:", err.message);
+      });
+    }
 
     return () => {
       if (socketRef.current) {
@@ -48,7 +52,7 @@ const AssistantChatBody = ({
         socketRef.current.disconnect();
       }
     };
-  }, []);
+  }, [businessName]);
 
   const sendMessage = () => {
     setMessages((prevMessages) => [
@@ -57,7 +61,7 @@ const AssistantChatBody = ({
     ]);
     if (socketRef.current) {
       socketRef.current.emit("message", {
-        business: "CHIPAS",
+        business: businessName,
         From: userAgentCookie,
         Body: newMessage,
       });
